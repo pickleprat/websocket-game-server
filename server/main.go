@@ -1,15 +1,18 @@
-package main 
+package main
 
 import (
-	"net/http" 
-	"log" 
-	"fmt" 
-	"encoding/json"
+	"context"
 	b64 "encoding/base64"
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
 
 	ws "github.com/coder/websocket"
 ) 
 
+
+var apiLog = "%s %s Status: %s\n"
 var rooms = make(Rooms, 0); 
 
 
@@ -21,7 +24,12 @@ func main() {
 	}
 
 	mux := http.NewServeMux(); 
-	mux.HandleFunc("/ws", websockitToMe); 
+	// api handlers
+	mux.HandleFunc("GET /api/ws", websockitToMe); 
+	mux.HandleFunc("GET /api/getRooms", getAllRooms); 
+	mux.HandleFunc("POST /api/createRoom", createRoom); 
+	
+
 	log.Println("Starting server at port 8000...");  
 	err := http.ListenAndServe(":8000", mux); 
 	if err != nil {
@@ -29,8 +37,27 @@ func main() {
 	} 
 } 
 
+func createRoom(w http.ResponseWriter, r *http.Request) {
+	client, err := NewMongoClient()
+	if err != nil {
+		log.Printf(apiLog, "POST", "/api/createRoom", http.StatusInternalServerError); 
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError); 
+	} 
+
+	coll := client.Database(MONGO_DBNAME).Collection("rooms"); 
+	result, err := coll.InsertOne(context.TODO(), nil)
+	if err != nil {
+		log.Printf(apiLog, "POST", "/api/createRoom", http.StatusInternalServerError); 
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	} 
+} 
+
 
 func websockitToMe(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed); 
+	} 
+
 	conn, err := ws.Accept(w, r, &ws.AcceptOptions{
 		CompressionMode: ws.CompressionNoContextTakeover, 
 	}); 
@@ -44,7 +71,6 @@ func websockitToMe(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		log.Printf("hello the connection is closing for some reason"); 
 		conn.Close(ws.StatusNormalClosure, "could not connect"); 
-		return
 	}() 
 
 	ctx := r.Context(); 
