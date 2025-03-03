@@ -5,15 +5,42 @@ import (
 	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
 	ws "github.com/coder/websocket"
+	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 ) 
 
+type Server struct {
+	client *mongo.Client
+} 
+
+func NewServer(client *mongo.Client) *Server {
+	return &Server{
+		client: client, 
+	} 
+} 
 
 var apiLog = "%s %s Status: %s\n"
 var rooms = make(Rooms, 0); 
+
+func handleHttpError(w http.ResponseWriter, err error, statusCode int, apiUrl, httpMethod string) {
+	if err != nil {
+		log.Printf(apiLog, httpMethod, apiUrl, statusCode); 
+		http.Error(w, 
+			fmt.Sprintf(
+				"%s: Error: %s\n", 
+				http.StatusText(statusCode), 
+				err.Error(), 
+			), 
+			statusCode, 
+		); 
+	} 
+} 
 
 
 func main() {
@@ -23,37 +50,78 @@ func main() {
 		Members: make([] Member, 0), 
 	}
 
+	client, err := NewMongoClient()
+	server := NewServer(client); 
+
+	if err != nil {
+		panic(err) 
+	} 
+
 	mux := http.NewServeMux(); 
 	// api handlers
-	mux.HandleFunc("GET /api/ws", websockitToMe); 
-	mux.HandleFunc("GET /api/getRooms", getAllRooms); 
-	mux.HandleFunc("POST /api/createRoom", createRoom); 
+	mux.HandleFunc("GET /api/ws", server.websockitToMe); 
+	mux.HandleFunc("GET /api/getRooms", server.getAllRooms); 
+	mux.HandleFunc("POST /api/createRoom", server.createRoom); 
 	
 
 	log.Println("Starting server at port 8000...");  
-	err := http.ListenAndServe(":8000", mux); 
+	err = http.ListenAndServe(":8000", mux); 
 	if err != nil {
 		panic(err) 
 	} 
 } 
 
-func createRoom(w http.ResponseWriter, r *http.Request) {
-	client, err := NewMongoClient()
-	if err != nil {
-		log.Printf(apiLog, "POST", "/api/createRoom", http.StatusInternalServerError); 
+func (server *Server) getAllRooms(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (server *Server) createRoom(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError); 
 	} 
 
-	coll := client.Database(MONGO_DBNAME).Collection("rooms"); 
-	result, err := coll.InsertOne(context.TODO(), nil)
-	if err != nil {
-		log.Printf(apiLog, "POST", "/api/createRoom", http.StatusInternalServerError); 
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-	} 
+	roomColl := server.client.Database(MONGO_DBNAME).Collection("rooms"); 
+	userColl := server.client.Database(MONGO_DBNAME).Collection("users"); 
+
+	_, err := roomColl.InsertOne(context.TODO(), nil)
+	handleHttpError(w, err, http.StatusInternalServerError, "/api/createRoom", http.MethodPost); 
+
+	// read request content 
+	reqBuf, err := io.ReadAll(r.Body); 
+	handleHttpError(w, err, http.StatusInternalServerError, "/api/createRoom", http.MethodPost); 
+
+	reqJson := CreateRoomRequest{}; 
+	err = json.Unmarshal(reqBuf, &reqJson);  
+	handleHttpError(w, err, http.StatusInternalServerError, "/api/createRoom", http.MethodPost)
+
+	roomId := RoomID(uuid.New().String()); 
+	member := &Member{}
+	filter := bson.D{{Key: "userId", Value: reqJson.Owner}};  
+	userColl.FindOne(context.TODO(), filter).Decode(&member); 
+
+	room := Room {
+		Id: roomId, 
+		Name: reqJson.Name,  
+		Genre: reqJson.Genre, 
+		Owner: reqJson.Owner, 
+		Description: reqJson.Description,
+
+	}  
+
+	roomBuf, err := json.Marshal(room); 
+	handleHttpError(w, err, http.StatusInternalServerError, "/api/createRoom", http.MethodPost); 
+	encodedRoom := b64.StdEncoding.EncodeToString(roomBuf); 
+
+	w.Header().Set("Content-Type", "application/json"); 
+	w.WriteHeader(http.StatusOK); 
+	json.NewEncoder(w).Encode(&CreateRoomResponse{
+		RoomId: string(roomId), 
+		EncodedRoom: encodedRoom, 
+	}); 
 } 
 
 
-func websockitToMe(w http.ResponseWriter, r *http.Request) {
+func (server *Server) websockitToMe(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed); 
 	} 

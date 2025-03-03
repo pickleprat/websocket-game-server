@@ -7,9 +7,12 @@ import (
 type RoomID string 
 
 type Room struct {
-	Id 	RoomID
-	Name 	string
-	Members [] Member
+	Id 			RoomID
+	Name 		string
+	Genre 		string
+	Description string
+	Owner 		string
+	Members 	[] Member
 } 
 
 type Rooms map[RoomID] *Room
