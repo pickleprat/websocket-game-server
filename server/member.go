@@ -5,6 +5,7 @@ import (
 ) 
 
 type Member struct {
+	UserId 		string 
 	Username 	string 
 	RoomId 		RoomID
 	Conn 		*ws.Conn

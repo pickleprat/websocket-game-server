@@ -105,7 +105,7 @@ func (server *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		Genre: reqJson.Genre, 
 		Owner: reqJson.Owner, 
 		Description: reqJson.Description,
-
+		Members: [] Member { *member, },  
 	}  
 
 	roomBuf, err := json.Marshal(room); 

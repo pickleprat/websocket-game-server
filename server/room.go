@@ -8,11 +8,12 @@ type RoomID string
 
 type Room struct {
 	Id 			RoomID
-	Name 		string
-	Genre 		string
-	Description string
-	Owner 		string
-	Members 	[] Member
+	Name 		string 		`json:"name"`
+	Genre 		string 		`json:"genre"`
+	Description string 		`json:"description"`
+	Owner 		string 		`json:"owner"`
+	RoomActive 	string 		`json:"roomActive"`
+	Members 	[] Member 	`json:"members"`
 } 
 
 type Rooms map[RoomID] *Room
