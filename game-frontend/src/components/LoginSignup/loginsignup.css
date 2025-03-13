@@ -1,0 +1,31 @@
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 80vh;
+} 
+
+.login-register-form {
+    border: solid 2px;
+    box-sizing: border-box;
+    justify-content: center; 
+    align-items: center;
+} 
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box; 
+    height : 200px; 
+    width: 400px; 
+    justify-content: space-evenly;
+    background-color: blueviolet;
+    color: white;
+} 
+
+.login-container h1 {
+    text-align: center; 
+    font-size: 36px;
+    font-weight: bold; 
+} 
