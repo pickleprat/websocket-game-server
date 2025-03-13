@@ -4,6 +4,9 @@ import "./loginsignup.css";
 export default function Login() : JSX.Element {
     return (
         <>
+        <div className="game-title">
+            <h1>Tatak.ai</h1>
+        </div>
         <div className="form-container">
             <form action="" className="login-register-form">
                 <div className="login-container">

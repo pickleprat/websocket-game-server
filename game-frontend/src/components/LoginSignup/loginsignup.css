@@ -19,7 +19,7 @@ body {
 } 
 
 .login-container {
-    border: solid 4px black ; 
+    border: solid 2px black ; 
     display: flex;
     flex-direction: column;
     box-sizing: border-box; 
@@ -28,10 +28,14 @@ body {
     background-color: transparent;
     color: white;
     border-radius: 20px;
+    background-color: rgba(129, 117, 117, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 } 
 
 .register-container {
-    border: solid 4px black ; 
+    border: solid 2px black ; 
     display: flex;
     flex-direction: column;
     box-sizing: border-box; 
@@ -40,6 +44,10 @@ body {
     background-color: transparent;
     color: white;
     border-radius: 20px;
+    background-color: rgba(129, 117, 117, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 } 
 
 .login-container h1 {
@@ -151,6 +159,16 @@ body {
     color: white;
 } 
 
+.game-title {
+    display: flex; 
+    justify-content: center;
+    height: 75px;
+} 
+
+.game-title h1 {
+    color: white;
+    font-size: 60px;
+} 
 
 
 
