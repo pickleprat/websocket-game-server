@@ -1,27 +1,45 @@
-
+body {
+    background: url("assets/mountains.jpg") no-repeat;
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+} 
 .form-container {
     display: flex;
     justify-content: center;
     align-items: center; 
     height: 80vh;
+    box-sizing: border-box;
 } 
 
 .login-register-form {
-    border: solid 2px;
-    box-sizing: border-box;
+    box-sizing: content-box;
     justify-content: center; 
     align-items: center;
 } 
 
 .login-container {
+    border: solid 4px black ; 
     display: flex;
     flex-direction: column;
     box-sizing: border-box; 
-    height : 200px; 
+    height : 400px; 
     width: 400px; 
-    justify-content: space-evenly;
-    background-color: blueviolet;
+    background-color: transparent;
     color: white;
+    border-radius: 20px;
+} 
+
+.register-container {
+    border: solid 4px black ; 
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box; 
+    height : 500px; 
+    width: 450px; 
+    background-color: transparent;
+    color: white;
+    border-radius: 20px;
 } 
 
 .login-container h1 {
@@ -29,3 +47,110 @@
     font-size: 36px;
     font-weight: bold; 
 } 
+
+.register-container h1 {
+    text-align: center; 
+    font-size: 36px;
+    font-weight: bold; 
+} 
+
+.input-box {
+    margin : 4px; 
+    padding: 5px; 
+    height: 60px; 
+    position: relative;
+} 
+
+.input-box input {
+    border: 1px solid white; 
+    border-radius: 40px;
+    margin: 5px; 
+    padding: 2px 15px; 
+    background : transparent;
+    width: 95%; 
+    height: 85%; 
+    color: white; 
+    caret-color: white; 
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+} 
+
+.input-box input::selection {
+    background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white for text selection */
+}
+
+.input-box input::-moz-selection {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.input-box input::placeholder {
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    position: relative;
+    left: 15px; 
+} 
+
+.input-box i {
+    position: absolute;
+    font-size: 25px; 
+    right: 30px;
+    top: 50%; 
+    transform: translateY(-40%);
+} 
+
+.input-labels {
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-evenly;
+} 
+
+.input-labels a {
+    color: white;
+    text-decoration: none;
+} 
+
+.input-labels a:hover {
+    text-decoration: underline;
+} 
+
+.submit-btn {
+    padding-top: 20px;
+    width: 98%;
+    height: 30%;
+} 
+
+.submit-btn button {
+    border : solid 2px black; 
+    margin-left: 10px;
+    margin-right: 4px;
+    font-family: "Poppins";
+    border-radius: 40px;
+    font-size: 15px;
+    text-align: center;
+    padding: 8px;
+    height: 50px;
+    transition: all 0.3s ease; 
+} 
+
+.submit-btn button:hover {
+    background-color: #8a2be2; 
+    color: white;
+    cursor: pointer;
+    transform: scale(1.05); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+}
+
+.register {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+} 
+
+.register a {
+    color: white;
+} 
+
+
+
+

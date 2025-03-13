@@ -28,10 +28,10 @@ export default function Login() : JSX.Element {
                     <div className="submit-btn">
                         <button className="submit-btn">Login</button>
                     </div>
-                </div>
                     <div className="register">
                         <label htmlFor="register">Don't have an account? <a href="/signup">Signup</a></label>
                     </div>
+                </div>
                 </form>
             </div> 
         </>
