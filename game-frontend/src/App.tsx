@@ -15,6 +15,7 @@ export default function App() : JSX.Element {
   return (
     <>
     <div>Home page</div>
+    <div></div>
     </>
   )
 }
