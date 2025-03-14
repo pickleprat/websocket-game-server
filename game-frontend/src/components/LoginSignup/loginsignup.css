@@ -84,7 +84,7 @@ body {
 } 
 
 .input-box input::selection {
-    background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white for text selection */
+    background-color: rgba(255, 255, 255, 0.3); 
 }
 
 .input-box input::-moz-selection {
