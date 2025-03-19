@@ -4,6 +4,7 @@ body {
     background-position: center; 
     background-attachment: fixed; 
 } 
+
 .form-container {
     display: flex;
     justify-content: center;

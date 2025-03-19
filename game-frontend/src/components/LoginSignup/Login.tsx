@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../SupabaseClient";
 
 import "./loginsignup.css"; 
+import { useAuthContext } from "../../AuthContext";
+import { UserSession } from "../../types";
 
 export default function Login(): JSX.Element {
     const [email, setEmail] = useState<string>(''); 
     const [password, setPassword] = useState<string>(''); 
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const authSesh = useAuthContext(); 
     const navigate = useNavigate(); 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -23,8 +26,12 @@ export default function Login(): JSX.Element {
             alert("Invalid email or password. Please try again.");
             console.error("Login error:", error.message);
         } else {
-            if(data.session) {
-                console.log("user session created"); 
+            const user = data.user; 
+            if (user) {
+                authSesh?.setUserSession({
+                    session: data.session, 
+                    user: user, 
+                } as UserSession)
             } 
 
             alert("Login successful!");

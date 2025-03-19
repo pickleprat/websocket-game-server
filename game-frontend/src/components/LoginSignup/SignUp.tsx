@@ -11,6 +11,7 @@ export default function Signup(): JSX.Element {
     const [emailId, setEmailId] = useState<string>(''); 
     const [password, setPassword] = useState<string>(''); 
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const authSesh = useAuthContext(); 
     const navigate = useNavigate(); 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +33,6 @@ export default function Signup(): JSX.Element {
         } else {
             const user = data.user; 
             if (user) {
-                const authSesh = useAuthContext(); 
                 authSesh?.setUserSession({
                     session: data.session, 
                     user: user, 
@@ -52,7 +52,6 @@ export default function Signup(): JSX.Element {
                     navigate("/login");
                 } 
             } 
-
             navigate("/login") 
         } 
     };
