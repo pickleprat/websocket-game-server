@@ -1,6 +1,8 @@
 import React, { JSX, useState } from "react"; 
 import { supabase } from "../../SupabaseClient";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../AuthContext";
+import { UserSession } from "../../types";
 
 import "./loginsignup.css"; 
 
@@ -30,6 +32,12 @@ export default function Signup(): JSX.Element {
         } else {
             const user = data.user; 
             if (user) {
+                const authSesh = useAuthContext(); 
+                authSesh?.setUserSession({
+                    session: data.session, 
+                    user: user, 
+                } as UserSession)
+
                 const {data: insertData, error: insertError } = await supabase
                 .from("profiles") 
                 .insert([{
@@ -44,6 +52,8 @@ export default function Signup(): JSX.Element {
                     navigate("/login");
                 } 
             } 
+
+            navigate("/login") 
         } 
     };
 

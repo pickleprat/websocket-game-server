@@ -42,7 +42,6 @@ export default function Login(): JSX.Element {
                     <div className="login-container">
                         <h1>Login</h1>
 
-                        {/* EMAIL FIELD */}
                         <div className="input-box">
                             <label htmlFor="emailid" />
                             <input 
