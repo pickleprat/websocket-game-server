@@ -35,7 +35,7 @@ export default function Login(): JSX.Element {
             } 
 
             alert("Login successful!");
-            navigate("/"); 
+            navigate("/rooms"); 
         }
     };
 

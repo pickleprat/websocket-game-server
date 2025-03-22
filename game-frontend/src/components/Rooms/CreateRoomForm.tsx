@@ -1,18 +1,56 @@
-import { JSX, useState } from "react";
+import React, { JSX, useState } from "react";
 import { useAuthContext } from "../../AuthContext";
 
 import "./room.css"
+import { useNavigate } from "react-router-dom";
+import { CreateRoomResponse } from "../../types";
 
 export default function CreateRoomForm(): JSX.Element {
     const [roomName, setRoomName] = useState<string | null>(null); 
     const [roomDescription, setRoomDescription] = useState<string | null>(null); 
     const [roomGenre, setRoomGenre] = useState<string | null>(null); 
+    const [createRoomResponse, setRoomResponse] = useState<CreateRoomResponse| null>(null); 
+
     const authSesh = useAuthContext(); 
+    const navigate = useNavigate(); 
 
-    const handleCreateRoom = () => {
-        const jwtToken = authSesh?.userSession?.session.access_token; 
-        const goServerUrl = import.meta.env.VITE_GO_SERVER_URL; 
+    const handleCreateRoom = async (e: React.FormEvent) => {
+        e.preventDefault(); 
+        if (authSesh && authSesh.userSession) {
+            const jwtToken = authSesh?.userSession?.session.access_token; 
+            const goServerUrl = import.meta.env.VITE_GO_SERVER_URL; 
+            const ownerId = authSesh?.userSession?.user.id; 
+         
+            try {
+                const response = await fetch(goServerUrl + "/createRoom", {
+                    headers: {
+                        "Content-Type": "application/json", 
+                        "Authorization": `Bearer ${jwtToken}`, 
+                    },  
+                    method: "POST", 
+                    body: JSON.stringify({
+                        "owner-id": ownerId,  
+                        "room-name": roomName, 
+                        "room-genre": roomGenre, 
+                        "room-description": roomDescription,  
+                    }), 
+                })
 
+                if(response.ok) {
+                    const requestJson = await response.json() as CreateRoomResponse;  
+                    setRoomResponse(requestJson); 
+                } else {
+                    if(createRoomResponse) {
+                        console.log("Could not get proper response")
+                    }  
+                } 
+            } catch(error) {
+                alert("Could not create room"); 
+                console.log(error) 
+            }   
+        } else {
+            navigate("/"); 
+        }  
     } 
 
     return (

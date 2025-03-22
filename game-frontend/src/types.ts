@@ -7,4 +7,12 @@ export interface UserSession {
     user: User
 } 
 
+export interface CreateRoomResponse {
+    roomName: string 
+    createdAt: string 
+    roomId: string 
+    roomStatus: boolean
+} 
+ 
+
 
