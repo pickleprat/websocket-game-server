@@ -9,9 +9,9 @@ type CreateRoomRequest struct {
 
 type SupabaseRoomCreationResponse struct {
 	Room 
-	RoomUuid 	string 	`json:"id"`
-	CreatedAt 	string 	`json:"created_at"`
-	RoomActive	bool 	`json:"roomActive"`
+	RoomUuid 	string 		`json:"id"`
+	CreatedAt 	string 		`json:"created_at"`
+	RoomActive	bool 		`json:"roomActive"`
 } 
 
 type CreateRoomResponse struct {
@@ -19,5 +19,8 @@ type CreateRoomResponse struct {
 	RoomActive 	bool 		`json:"roomStatus"`
 	CreatedAt 	string 		`json:"createdAt"`
 	RoomName 	string 		`json:"roomName"`
-	
+} 
+
+type MyRoomsRequestModel struct {
+	UserUid 	string 		`json:"id"`
 } 

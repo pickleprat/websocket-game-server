@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
 )
 
 func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
@@ -115,3 +116,52 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 	} 
 
 }
+
+func (s *Server) getMyRooms(w http.ResponseWriter, r *http.Request) {
+	reqBuf, err := io.ReadAll(r.Body); 
+	if err != nil {
+		errText := "could not read body"; 
+		http.Error(w, errText, http.StatusUnprocessableEntity); 
+		s.logRequest(r, http.StatusUnprocessableEntity, errors.New(errText))
+		return 
+	} 
+
+	userReq := MyRoomsRequestModel{} 
+	err = json.Unmarshal(reqBuf, &userReq); 
+	if err != nil {
+		errText :=  fmt.Sprintf("unprocessable entity : %s\n", string(reqBuf)); 
+		http.Error(w, errText, http.StatusUnprocessableEntity); 
+		s.logRequest(r, http.StatusUnprocessableEntity, errors.New(errText))
+		return 
+	} 
+
+	rooms := make([] Room, 0); 
+	roomBuf, liveRoomCount, err := s.AuthClient.From("rooms").Select("*", "exact", false).Execute(); 
+	if err != nil {
+		errText :=  fmt.Sprintf("could not fetch : %s\n", string(roomBuf)); 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+		return 
+	} 
+
+	if liveRoomCount <= 0 {
+		errText :=  "no rooms in the database"; 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+		return 
+	} 
+
+	err = json.Unmarshal(roomBuf, &rooms); 
+	if err != nil {
+		errText :=  fmt.Sprintf("room could not be parsed: %s\n", string(roomBuf)); 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+		return 
+	} 
+
+	myRooms := make([] Room, 0); 
+
+	for _, room := range rooms {
+	} 
+
+} 

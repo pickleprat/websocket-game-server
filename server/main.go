@@ -59,6 +59,7 @@ func main() {
 	
 	// adding api endpoints 
 	mux.HandleFunc("/api/createRoom", server.addMiddleware(server.createRoom)); 
+	mux.HandleFunc("/api/getMyRooms", server.addMiddleware(server.getMyRooms));  
 
 	log.Println("Listening to server at port http://localhost:8000 ....")
 	err := http.ListenAndServe(":8000", mux); 

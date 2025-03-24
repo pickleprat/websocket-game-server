@@ -1,8 +1,8 @@
 import { JSX, useEffect } from "react";
 
 export default function ShowMyRooms() : JSX.Element {
+    const pullUserRooms = async() : 
     useEffect(() => {
-        console.log("Use effect ran")
     }, [])
 
     return (
