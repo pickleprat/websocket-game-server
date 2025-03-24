@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -69,7 +70,7 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		},
 	} 
 
-	_, _, err = s.AuthClient.From("rooms").Insert(room, false, "", "", "exact").Execute()
+	data, _, err := s.AuthClient.From("rooms").Insert(room, false, "", "", "exact").Execute()
 	if err != nil {
 		errText := err.Error(); 
 		http.Error(w, errText, http.StatusInternalServerError); 
@@ -77,5 +78,40 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		return 
 	} 
 
-	s.logRequest(r, http.StatusOK, nil); 
+	roomCreateRes := [] SupabaseRoomCreationResponse{} 
+	err = json.Unmarshal(data, &roomCreateRes)
+
+	if err != nil {
+		errText := fmt.Sprintf("could not generate room response : %s\n", string(data)); 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+	} 
+
+	if len(roomCreateRes) > 0 {
+		returnedRoom := roomCreateRes[0]
+
+		roomRes := CreateRoomResponse{
+			RoomName: returnedRoom.Name,
+			RoomUuid: returnedRoom.RoomUuid,
+			RoomActive: returnedRoom.RoomActive,
+			CreatedAt: returnedRoom.CreatedAt,
+		} 
+
+		roomResBuf, err := json.Marshal(roomRes)
+		if err != nil {
+			errText := fmt.Sprintf("could not convert roomResponse to something tangible %s\n", string(roomResBuf)); 
+			http.Error(w, errText, http.StatusInternalServerError); 
+			s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+		} 
+
+		fmt.Fprint(w, string(roomResBuf)) 
+		s.logRequest(r, http.StatusOK, nil); 
+
+	} else {
+		errText := "room was not created for some reason"; 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+		return 
+	} 
+
 }

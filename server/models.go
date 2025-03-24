@@ -6,3 +6,18 @@ type CreateRoomRequest struct {
 	RoomGenre 			string `json:"room-genre"`
 	RoomDescription     string `json:"room-description"`
 } 
+
+type SupabaseRoomCreationResponse struct {
+	Room 
+	RoomUuid 	string 	`json:"id"`
+	CreatedAt 	string 	`json:"created_at"`
+	RoomActive	bool 	`json:"roomActive"`
+} 
+
+type CreateRoomResponse struct {
+	RoomUuid 	string 		`json:"roomId"`
+	RoomActive 	bool 		`json:"roomStatus"`
+	CreatedAt 	string 		`json:"createdAt"`
+	RoomName 	string 		`json:"roomName"`
+	
+} 

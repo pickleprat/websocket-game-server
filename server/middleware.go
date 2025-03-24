@@ -10,7 +10,6 @@ import (
 
 func (s *Server) authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		defer next(w, r) 
 		authKey := r.Header.Get("Authorization"); 
 
 		if authKey == "" {
@@ -18,7 +17,7 @@ func (s *Server) authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			return 
 		} 
 
-		accessToken := strings.Trim("Bearer ", authKey); 
+		accessToken := strings.TrimPrefix(authKey, "Bearer "); 
 		token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error){
 			return []byte(s.JwtSecret), nil
 		}, jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
@@ -32,7 +31,8 @@ func (s *Server) authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "unable to map claims", http.StatusUnauthorized); 
 			return
 		}  
-		
+
+		next(w, r); 
 	}  
 }  
 
@@ -40,7 +40,7 @@ func (s *Server) allowOriginMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*"); 	
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        w.Header().Set("Access-Control-Allow-Headers", "*")
         
         if r.Method == http.MethodOptions {
             w.WriteHeader(http.StatusNoContent)
