@@ -1,8 +1,10 @@
 package main
 
 import (
+	// "fmt"
 	"log"
 	"os"
+
 	"net/http"
 
 	"github.com/joho/godotenv"
@@ -15,13 +17,14 @@ func NewServer() *Server {
 		SUPABASE_ANON_KEY = os.Getenv("SUPABASE_ANON_KEY")
 		SUPABASE_API_URL = os.Getenv("SUPABASE_API_URL")
 		SUPABASE_JWT_SECRET = os.Getenv("SUPABASE_JWT_SECRET")
+		SUPABASE_SERVICE_KEY = os.Getenv("SUPABASE_SERVICE_KEY") 
 	) 
 
-	if SUPABASE_ANON_KEY == "" || SUPABASE_API_URL == "" || SUPABASE_JWT_SECRET == "" {
+	if SUPABASE_ANON_KEY == "" || SUPABASE_API_URL == "" || SUPABASE_JWT_SECRET == "" || SUPABASE_SERVICE_KEY == "" {
 		log.Fatal("could not initialize server")
 	} 
 
-	client, err := supabase.NewClient(SUPABASE_ANON_KEY, SUPABASE_API_URL, nil); 
+	client, err := supabase.NewClient(SUPABASE_API_URL, SUPABASE_SERVICE_KEY, nil); 
 
 	if err != nil {
 		log.Fatalf("could not instantiate supabase client due to %+v\n", err); 
@@ -32,6 +35,7 @@ func NewServer() *Server {
 		AnonKey: SUPABASE_ANON_KEY, 
 		ApiUrl: SUPABASE_API_URL,
 		JwtSecret: SUPABASE_JWT_SECRET,
+		ServiceKey: SUPABASE_SERVICE_KEY, 
 	} 
 } 
 
