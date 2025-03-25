@@ -13,6 +13,24 @@ export interface CreateRoomResponse {
     roomId: string 
     roomStatus: boolean
 } 
+
+interface Member {
+  id: string;
+  full_name: string;
+  created_at: string;
+}
+
+export interface Room {
+    id: string;
+    full_name: string;
+    created_at: string;
+    "owner-name": string;
+    name: string;
+    genre: string;
+    description: string;
+    members: Member[];
+    owner: string;
+} 
  
 
 

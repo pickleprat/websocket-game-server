@@ -1,3 +1,5 @@
+"use client"; 
+
 import React, { JSX, useState } from "react";
 import { useAuthContext } from "../../AuthContext";
 
@@ -39,6 +41,7 @@ export default function CreateRoomForm(): JSX.Element {
                 if(response.ok) {
                     const requestJson = await response.json() as CreateRoomResponse;  
                     setRoomResponse(requestJson); 
+                    console.log(requestJson) 
                 } else {
                     if(createRoomResponse) {
                         console.log("Could not get proper response")

@@ -7,7 +7,7 @@ type CreateRoomRequest struct {
 	RoomDescription     string `json:"room-description"`
 } 
 
-type SupabaseRoomCreationResponse struct {
+type SupabaseRoomsResponse struct {
 	Room 
 	RoomUuid 	string 		`json:"id"`
 	CreatedAt 	string 		`json:"created_at"`

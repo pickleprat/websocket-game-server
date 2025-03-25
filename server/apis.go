@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
 )
 
 func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +78,7 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		return 
 	} 
 
-	roomCreateRes := [] SupabaseRoomCreationResponse{} 
+	roomCreateRes := [] SupabaseRoomsResponse{} 
 	err = json.Unmarshal(data, &roomCreateRes)
 
 	if err != nil {
@@ -135,7 +134,7 @@ func (s *Server) getMyRooms(w http.ResponseWriter, r *http.Request) {
 		return 
 	} 
 
-	rooms := make([] Room, 0); 
+	rooms := make([] SupabaseRoomsResponse, 0); 
 	roomBuf, liveRoomCount, err := s.AuthClient.From("rooms").Select("*", "exact", false).Execute(); 
 	if err != nil {
 		errText :=  fmt.Sprintf("could not fetch : %s\n", string(roomBuf)); 
@@ -159,9 +158,22 @@ func (s *Server) getMyRooms(w http.ResponseWriter, r *http.Request) {
 		return 
 	} 
 
-	myRooms := make([] Room, 0); 
+	myRooms := make([] SupabaseRoomsResponse, 0); 
 
 	for _, room := range rooms {
+		if room.Owner == userReq.UserUid{
+			myRooms = append(myRooms, room)
+		} 
 	} 
+
+	resBuf, err := json.Marshal(myRooms); 
+	if err != nil {
+		errText :=  fmt.Sprintf("room could not be parsed: %s\n", string(roomBuf)); 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+	} 
+
+	fmt.Fprint(w, string(resBuf)); 
+	s.logRequest(r, http.StatusOK, nil)
 
 } 
