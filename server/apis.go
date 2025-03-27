@@ -12,6 +12,7 @@ import (
 	ws "github.com/coder/websocket"
 )
 
+
 var manager *managers.ConnectionManager = managers.NewConnectionManager()
 
 func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +33,8 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		return 
 	} 
 
+	// owner finding block 
+	// finding an owner in the set of profiles 
 	usersBuf, count, err := s.AuthClient.From("profiles").Select("*", "exact", false).Execute();  
 	members := make([] Member, 0); 
 	if err != nil {
@@ -39,6 +42,13 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, errText, http.StatusInternalServerError); 
 		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
 	} 
+
+	if count == 0 {
+		errText := "no such owner exists"; 
+		http.Error(w, errText, http.StatusInternalServerError); 
+		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
+	} 
+
 
 	err = json.Unmarshal(usersBuf, &members); 
 	if err != nil {
@@ -55,12 +65,9 @@ func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {
 		} 
 	} 
 
-	if count == 0 {
-		errText := "no such owner exists"; 
-		http.Error(w, errText, http.StatusInternalServerError); 
-		s.logRequest(r, http.StatusInternalServerError, errors.New(errText))
-	} 
+	// owner finding block 
 
+	// room insertion block 
 	room := Room{
 		Owner: crm.OwnerId,
 		OwnerName: owner.FullName, 

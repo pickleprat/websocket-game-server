@@ -17,7 +17,7 @@ type Server struct {
 	Middleware		[] MiddlewareLayer 
 }
 
-
+// database components 
 type Room struct {
 	OwnerName 	string 		`json:"owner-name"`
 	Name 		string 		`json:"name"`
@@ -38,6 +38,29 @@ type Message struct {
 	UserUid 	string `json:"userId"`
 	RoomId 		string `json:"roomId"`
 	Name 		string `json:"name"`
+} 
+
+type SupabaseRoomsResponse struct {
+	Room 
+	RoomUuid 	string 		`json:"id"`
+	CreatedAt 	string 		`json:"created_at"`
+	RoomActive	bool 		`json:"roomActive"`
+} 
+
+func (srr *SupabaseRoomsResponse) GetId() string {
+	return srr.RoomUuid
+} 
+
+func (msg *Message) GetId() string {
+	return msg.UserUid + msg.RoomId
+} 
+
+func (m *Member) GetId() string {
+	return m.MemberId
+} 
+
+func (r * Room) GetId() string {
+	return r.Owner
 } 
 
 
