@@ -24,3 +24,9 @@ type CreateRoomResponse struct {
 type MyRoomsRequestModel struct {
 	UserUid 	string 		`json:"id"`
 } 
+
+
+type ConnectRoomRequest struct {
+	UserId 		string 		`json:"userid"`
+	RoomId 		string 		`json:"roomid"`
+} 

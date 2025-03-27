@@ -3,6 +3,7 @@ module pickleprat/ws-game-server
 go 1.22.11
 
 require (
+	github.com/coder/websocket v1.8.13
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/joho/godotenv v1.5.1
 	github.com/supabase-community/supabase-go v0.0.4

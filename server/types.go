@@ -32,3 +32,12 @@ type Member struct {
 	FullName 	string `json:"full_name"`
 	CreatedAt  	string `json:"created_at"`
 } 
+
+type Message struct {
+	Msg 		string `json:"msg"`
+	UserUid 	string `json:"userId"`
+	RoomId 		string `json:"roomId"`
+	Name 		string `json:"name"`
+} 
+
+
