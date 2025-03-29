@@ -18,7 +18,7 @@ func (s *Server) authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		} 
 
 		accessToken := strings.TrimPrefix(authKey, "Bearer "); 
-		token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error){
+		token, err := jwt.Parse(accessToken, func(token *jwt.Token) (any, error){
 			return []byte(s.JwtSecret), nil
 		}, jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}))
 

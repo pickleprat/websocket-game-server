@@ -12,7 +12,6 @@ import (
 	ws "github.com/coder/websocket"
 )
 
-
 var manager *managers.ConnectionManager = managers.NewConnectionManager()
 
 func (s *Server) createRoom(w http.ResponseWriter, r *http.Request) {

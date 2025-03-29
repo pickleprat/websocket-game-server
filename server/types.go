@@ -8,6 +8,7 @@ import (
 
 type MiddlewareLayer func(http.HandlerFunc) http.HandlerFunc
 
+
 type Server struct {
 	AuthClient 		*supabase.Client
 	AnonKey 		string 
@@ -62,5 +63,3 @@ func (m *Member) GetId() string {
 func (r * Room) GetId() string {
 	return r.Owner
 } 
-
-
