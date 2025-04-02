@@ -41,7 +41,7 @@ export default function CreateRoomForm(): JSX.Element {
                 if(response.ok) {
                     const requestJson = await response.json() as CreateRoomResponse;  
                     setRoomResponse(requestJson); 
-                    console.log(requestJson) 
+                    navigate(`/live-room/${requestJson.roomId}`); 
                 } else {
                     if(createRoomResponse) {
                         console.log("Could not get proper response")
@@ -92,7 +92,7 @@ export default function CreateRoomForm(): JSX.Element {
                     />
                 </div>
                 <div className="create-room-btn-shell">
-                    <button className="create-room-btn">Create</button>
+                    <button className="create-room-btn">Create & Join</button>
                 </div>
             </form>
         </div>
