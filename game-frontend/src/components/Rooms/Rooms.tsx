@@ -7,7 +7,6 @@ export default function Rooms() : JSX.Element {
     return (
         <>
             <CreateRoomForm /> 
-            {/* <ShowMyRooms /> */}
             <ShowLiveRooms /> 
         </>
     ) 
