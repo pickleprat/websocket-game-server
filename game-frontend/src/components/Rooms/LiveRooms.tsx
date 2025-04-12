@@ -11,6 +11,7 @@ export default function LiveRoom(): JSX.Element {
 
     return (
         <>
+            <div>Welcome to the room</div>
         </>
     )
 } 
